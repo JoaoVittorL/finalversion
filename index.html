@@ -2,267 +2,291 @@
 <html>
 
 <head>
+  <base target="_top">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <?!= HtmlService.createHtmlOutputFromFile('autocomplete').getContent(); ?>
   <?!= HtmlService.createHtmlOutputFromFile('style').getContent(); ?>
 </head>
 
 <body>
-  <div class="container">
-    <!-- form -->
-    <form id="form">
-      <!-- header -->
-      <header class="backgroundImg">
-        <img  class="img-fluid" src="https://i.imgur.com/PFsJWhA.png"/>
-      </header>
-      <!-- header -->
-
-
-
-
-
-
-
-      <!-- Name and Setor -->
+  <div class="container-lg">
+    <form>
+      <!-- Header -->
+      <div>
+        <img class="img-fluid" style="width:100%; height: 200px;" src="https://imgur.com/FlTSJ0v.png" />
+      </div>
+      <!-- Header -->
+      <h1>Solicitações TI</h1>
+      <!-- First Section -->
       <section>
         <div class="form-group">
           <label for="nameForAutoComplete">Name</label>
-          <input class="inputStyle form-control" type="text"  name="name"  id="nameForAutoComplete" placeholder="Digite seu nome..."  required>
+          <input style="margin:0;" class="form-control" type="text" name="name" id="nameForAutoComplete"
+            placeholder="Digite seu nome..." required>
         </div>
 
         <div class="form-group">
-          <label  for="setorForAutoComplete">Setor</label>
-          <input  class="inputStyle form-control" type="text" name="setor" id="setorForAutoComplete" placeholder="Digite o seu setor..." required>
+          <label for="funcaoForAutoComplete">Função</label>
+          <input style="margin:0;" class="form-control" type="text" name="funcao" id="funcaoForAutoComplete" disabled>
         </div>
       </section>
-      <!-- Name and Setor -->
-      <div class="form-group mb-4 box">
-        <label class="mb-2">Example select element</label>
-        <select class="form-control mb-2" id="input2">
-        <option disabled selected>Choose</option>
-        <?!= options ?>
-      </select>
-      </div>
-      <!-- Autocomplete  categorias-->
+      <!-- First Section -->
+      <!-- Section select -->
       <section>
-        <div>
-          <label>Category:</label>
-          <select class="form-select form-select-lg mb-1" id="color" name="color" onchange="getCategoria(this.value)" aria-label=".form-select-lg example">
-          <option value="" disabled selected>Escolha</option>
-          <? for (var i = 0; i < colors.length; i++) { ?>
-            <option value="<?= colors[i] ?>"><?= colors[i] ?></option>
-          <? } ?>
-        </select>
+        <div class="form-group mb-4 box">
+          <label class="mb-2">Setor</label>
+          <select class="form-control mb-2" id="setor">
+            <option disabled selected>Escolha</option>
+            <?!= options ?>
+          </select>
         </div>
-        <div>
-          <label>Subcategory:</label>
-          <select class="form-select form-select-lg mb-1" name="fruit" id="fruit" aria-label=".form-select-lg example">
-          <option value="" disabled selected>Escolha</option>
-        </select>
+        <div style=" display:flex; justify-content:space-between; width: 100%;" class="d-flex; flex-wrap;">
+          <div style=" width: 45%;" class="form-group mb-4 box ">
+            <label class="mb-2">Categoria</label>
+            <select class="form-control mb-2" id="categoria" id="color" name="color" onchange="getCategoria(this.value)"
+              aria-label=".form-select-lg example">
+              <option value="" disabled selected>Escolha</option>
+              <? for (var i = 0; i < colors.length; i++) { ?>
+              <option value="<?= colors[i] ?>">
+                <?= colors[i] ?>
+              </option>
+              <? } ?>
+            </select>
+          </div>
+          <div style=" width: 45%;" class="form-group mb-2 box ">
+            <label class="mb-2">Subcategoria</label>
+            <select class="form-control mb-2" name="fruit" id="fruit" aria-label=".form-select-lg example">
+              <option value="" disabled selected>Escolha</option>
+            </select>
+          </div>
+        </div>
+
+      </section>
+      <!-- Section select -->
+      <!-- Section Text area -->
+      <section>
+        <div class="form-floating mb-2">
+          <textarea class="form-control" placeholder="Descreva o chamado..." id="textarea"
+            style="height: 150px"></textarea>
         </div>
       </section>
-      <!-- Autocomplete  categorias-->
-
-      <div class="mb-1">
-        <label  for="textarea" class="form-label">Descrição</label>
-        <textarea class="form-control" id="textarea" rows="6" placeholder="Descreva o seu chamado..." required></textarea>
+      <!-- Section Text area -->
+      <!-- Section File-->
+      <section>
+        <div style="width:100%;" class="fileUpload btn btn-primary mb-1">
+          <span>Anexar arquivo</span>
+          <input type="file" class="upload" id="file" multiple />
+        </div>
+        <p id="messagemAnexo"></p>
+      </section>
+      <!-- Section File-->
+      <div style="padding-inline: 2%; padding-bottom:2%;">
+        <button type="button" id="btn">Enviar Formulário</button>
       </div>
-
-
-
-      <div class="fileUpload btn btn-primary">
-        <span>Upload</span>
-        <input id="file"  type="file" type="file" class="upload" />
-      </div>
-
-      <button type="submit" id="button" value="Enviar formulário">Enviar Formulário</button>
-
     </form>
-    <!-- form -->
-    <!-- modal -->
-    <div style="display:none;" id="modal">
-      <p style="text-align:center; font-size: 20px;">As informações estão corretas ?</p>
-      <div class="modalButton">
-        <button id="btnYes" onclick="sendValues()">Sim</button>
-        <button id="btnNo" onclick="closeModal()">Não</button>
+
+    <div id="modalYesNo">
+      <p style="text-align:center;"> Deseja enviar o formulário?
+      <p>
+      <div style="display:flex; align-items:center; justify-content: space-between">
+        <button id="btnYes" onclick="sendValuesForSheet()">Sim</button>
+        <button id="btnNo" onclick="closeModal()">Cancelar</button>
       </div>
     </div>
-    <!-- modal -->
-    <!-- Endmodal -->
-    <div style="display:none;" id="modalEnd">
-      <p style=" display:block ;text-align:center; font-size: 20px;">Formulário enviado com sucesso!!!</p>
+    <div id="modalOk">
+      <p style="text-align:center;"> Formulário enviado com sucesso!!!
+      <p>
       <div>
-        <button id="EndButton">OK</button>
+        <button id="btnOk" onclick="refreshFormForUser()">OK</button>
       </div>
     </div>
-    <!-- Endmodal -->
+    <div id="loading" style="relative">
+      <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); ">
+        <div style="margin-inline: auto;" class="c-loader"></div>
+        <p style="text-align:center;">Enviando...</p>
+      </div>
+    </div>
   </div>
 </body>
 <script>
-  $(document).ready(function() {
-      getNameForAutoComplete();
-      getSetorForAutoComplete()
-    });
+  $(document).ready(function () {
+    getNameForAutoComplete();
+  });
 
-    function getSetorForAutoComplete() {
-      google.script.run.withSuccessHandler(function(ar) {
-        statesArray = [];
-        ar.forEach(function(item, index) {
-          statesArray.push(item[0]);
-        });
-
-        $("#setorForAutoComplete").autocomplete({
-          source: statesArray
-        });
-      }).getSetorForAutoComplete();
-    }
-
-//AUTO COMPLETE JQUERY
-  const fileUploader = document.getElementById("file"); //ARQUIVO PARA ENVIO
-  const button = document.querySelector("#button") 
-  const modal = document.querySelector("#modal")
-  const form = document.querySelector("#form")
-  button.addEventListener('click', showOptionsForUsers)
-
-  const endButton = document.querySelector('#EndButton').addEventListener('click', initialOfEnd)
-  const endModal = document.querySelector('#modalEnd')  
-  
-  function initialOfEnd(){
-     endModal.style.display = 'none'
-     showForm()
+  let arr = []
+  let obj = {};
+  function getNameForAutoComplete() {
+    google.script.run.withSuccessHandler(function (ar) {
+      arr = ar.flat().filter((element) => {
+        return element !== "";
+      });
+      Object.keys(ar).forEach(function (key) {
+        const nome = ar[key][0];
+        const funcao = ar[key][1];
+        if (nome !== "") {
+          obj[nome] = funcao;
+        }
+      });
+      const statesArray = Object.keys(obj);
+      $("#nameForAutoComplete").autocomplete({
+        source: statesArray,
+        select: function (event, ui) {
+          const selectedName = ui.item.value;
+          const selectedSetor = obj[selectedName];
+          $("#funcaoForAutoComplete").val(selectedSetor);
+        }
+      });
+    }).getNameForAutoComplete();
   }
 
-function showOptionsForUsers(e){
-    e.preventDefault()
-    showModal()
-    hiddenForm()
-  }
+  //variveis para manipular a Dom
+  const button = document.querySelector("#btn")
+  const form = document.querySelector('form')
+  const modalYesNo = document.querySelector('#modalYesNo')
+  const loadingMessage = document.querySelector('#loading')
 
-//Mostrar o sim e não 
-function showModal(){
-    modal.style.display = 'block'
-}
-//Esconde o forms
-function hiddenForm(){
-   form.style.display = 'none'
-} 
+  // variaveis para pegar os valores
+  const name = document.querySelector("#nameForAutoComplete")
+  const funcao = document.querySelector("#funcaoForAutoComplete")
+  const setor = document.querySelector("#setor")
+  const categoria = document.querySelector("#categoria")
+  const subCategoria = document.querySelector("#fruit")
+  const textarea = document.querySelector("#textarea")
+  let inputFile = document.querySelector("#file")
 
-//Se escolher o Não no showModal ele volta  mostra o forms  esconde o modal
-function closeModal(){
-   modal.style.display = 'none'
-   showForm()
-}
+  button.addEventListener("click", (e) => {
+    e.preventDefault();
+    let nameValue = name.value.toUpperCase()
+    let funcaoValue = funcao.value
+    let setorValue = setor.value
+    let categoriaValue = categoria.value
+    let subCategoriaValue = fruit.value
+    let textareaValue = textarea.value
 
-//Mostra o forms quando escolhe o não
-function showForm(){
-   form.style.display = 'block'
-} 
+    if (nameValue !== '' && setorValue !== '' && categoriaValue !== '' && subCategoriaValue !== '' && textareaValue !== '') {
+      if (!arr.includes(nameValue)) {
+        alert(`O nome informado não consta na nossa base de dados.`);
+        name.style.cssText = 'border: 1px solid red;';
+        document.getElementById("nameForAutoComplete").value = "";
 
-
-function showEndModal(){
-  modal.style.display = 'none'
-  endModal.style.display = 'block'
-}
-
-
-let arr = [];
-function getNameForAutoComplete() {
-  google.script.run.withSuccessHandler(function(ar) {
-    arr = ar.flat().filter((element) => {
-      return element !== "";
-    });
-    statesArray = [];
-    arr.forEach(function(item, index) {
-      statesArray.push(item);
-    });
-    $("#nameForAutoComplete").autocomplete({
-      source: statesArray
-    });
-  }).getNameForAutoComplete();
-} 
-
-
-  
-function sendValues(){
-    let inputName = document.querySelector('#nameForAutoComplete').value
-    let inputSetor = document.querySelector('#setorForAutoComplete').value
-    let textarea = document.querySelector('#textarea').value
-    let fileUploader = document.getElementById("file"); //ARQUIVO PARA ENVIO
-    let color = document.getElementById('color').value
-    let fruit = document.getElementById('fruit').value
-    let msg = document.getElementById('#message')
-
-  
-    console.log(arr)
-
-    if (!arr.includes(inputName)) {
-    alert(`O (${inputName}) informado não está na lista de nomes disponíveis.`);
-    closeModal()
-    return;
-  }
-
-
-    if (fileUploader.files.length > 0) {
-     
-    var file = fileUploader.files[0];
-    var reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function() {
-      var rawLog = reader.result.split(',')[1];
-      google.script.run
-        .withSuccessHandler(function(a) {
-          showEndModal()
+        name.addEventListener('click', () => {
+          name.style.cssText = 'border: 1px solid #ced4da;';
         })
-        .uploadFilesToGoogleDrive(rawLog, file.name, file.type, inputName, inputSetor, textarea, fruit, color);
-         clear();
+        return;
+      } else {
+        name.style.cssText = 'border: 1px solid green;'
+        showModalYesNo()
+      }
+    } else {
+      alert("Preencha os campos!!!")
+    }
+  })
+
+  const arrayInputsForManipulation = [name, setor, categoria, subCategoria, textarea, button, inputFile]
+
+  function showModalYesNo() {
+    name.style.cssText = 'border: 1px solid #ced4da;';
+    form.style.cssText = "filter: blur(1px);"
+    arrayInputsForManipulation.forEach(item => item.disabled = true)
+    modalYesNo.style.display = 'block'
+  }
+
+  function closeModal() {
+    form.style.cssText = "filter: blur(0);"
+    arrayInputsForManipulation.forEach(item => item.disabled = false)
+    modalYesNo.style.display = 'none'
+  }
+
+  function showLoadingMenssage() {
+    loadingMessage.style.display = "block"
+    modalYesNo.style.display = 'none'
+  }
+
+  function sendValuesForSheet() {
+    let nameValue = name.value.toUpperCase()
+    let funcaoValue = funcao.value
+    let setorValue = setor.value
+    let categoriaValue = categoria.value
+    let subCategoriaValue = subCategoria.value
+    let textareaValue = textarea.value
+    let inputFile = document.querySelector("#file")
+    let sendingMessage = document.querySelector("#sending-message")
+
+    // exibe a mensagem de "enviando" para o usuário
+    showLoadingMenssage()
+
+
+    if (inputFile.files.length > 0) {
+
+      var file = inputFile.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        var rawLog = reader.result.split(',')[1];
+        google.script.run
+          .withSuccessHandler(function (a) {
+            showEndModalForUser()
+          }).uploadFileInGoogleDrive(rawLog, file.name, file.type, nameValue, funcaoValue, setorValue, categoriaValue, subCategoriaValue, textareaValue);
+        clear()
       };
     } else {
-    google.script.run.withSuccessHandler(function(a) {
-        showEndModal()
-      }).uploadFilesToGoogleDriveNothingFile(inputName, inputSetor,textarea, fruit, color);
-      clear();
-      }
+      google.script.run.withSuccessHandler(function (a) {
+        showEndModalForUser()
+      }).nothingFile(nameValue, funcaoValue, setorValue, categoriaValue, subCategoriaValue, textareaValue);
+      clear()
     }
 
-  
-  function clear(){
-     document.getElementById("nameForAutoComplete").value = "";
-     document.getElementById("setorForAutoComplete").value = "";
-     document.getElementById("textarea").value = "";
-     document.getElementById("color").value = "";
-     document.getElementById("fruit").value = "";
-     document.getElementById("fileUploader").value = "";
-   }
+  }
 
-   //Pegar categorias e aplicar no select option
 
-    function getCategoria(color) 
-    {
-    
-    google.script.run.withSuccessHandler(function(ar) 
-    {
+  function clear() {
+    document.querySelector("#nameForAutoComplete").value = "";
+    document.querySelector("#funcaoForAutoComplete").value = "";
+    document.querySelector("#setor").value = "";
+    document.querySelector("#categoria").value = "";
+    document.querySelector("#fruit").value = "";
+    document.querySelector("#textarea").value = "";
+    document.querySelector("#file").value = "";
+  }
 
-    console.log(ar);
-    
-    fruit.length = 0;
-    
-    let option = document.createElement("option");
-    option.value = "";
-    option.text = "";
-    fruit.appendChild(option);
-    
-    ar.forEach(function(item, index) 
-    {    
+  function showEndModalForUser() {
+    form.style.display = 'none'
+    modalYesNo.style.display = 'none'
+    modalOk.style.display = 'block'
+    loadingMessage.style.display = "none"
+  }
+  function refreshFormForUser() {
+    modalOk.style.display = 'none'
+    form.style.display = 'block'
+    closeModal()
+  }
+
+
+  function getCategoria(color) {
+
+    google.script.run.withSuccessHandler(function (ar) {
+
+      console.log(ar);
+
+      fruit.length = 0;
+
       let option = document.createElement("option");
-      option.value = item;
-      option.text = item;
-      fruit.appendChild(option);    
-    });
-    
+      option.value = "";
+      option.text = "";
+      fruit.appendChild(option);
+
+      ar.forEach(function (item, index) {
+        let option = document.createElement("option");
+        option.value = item;
+        option.text = item;
+        fruit.appendChild(option);
+      });
+
     }).getCategorias(color);
-    
-    };
+
+  };
 
 </script>
 
